@@ -150,7 +150,7 @@ object Utils {
             "zh",
             "z",
             "i",
-            "y",
+            "i",
             "k",
             "l",
             "m",
@@ -183,7 +183,7 @@ object Utils {
             "Zh",
             "Z",
             "I",
-            "Y",
+            "I",
             "K",
             "L",
             "M",
@@ -295,16 +295,20 @@ object Utils {
         if(firstName==null&&lastName==null) return null
         var firstInitial:Char?=null
         var lastInitial:Char?=null
-        if(firstName!=null&&firstName.isNotEmpty()){
-            firstInitial=firstName[0]
+        if(firstName!=null&&firstName.trim().isNotEmpty()){
+            firstInitial=firstName.trim()[0]
         }
-        if(lastName!=null&&lastName.isNotEmpty()){
-            lastInitial=lastName[0]
+        if(lastName!=null&&lastName.trim().isNotEmpty()){
+            lastInitial=lastName.trim()[0]
         }
-        if(firstInitial==' ') return null
-        if(firstInitial!=null&&lastInitial==null) return firstInitial.toString().toUpperCase()
-        if(firstInitial==null) return null
-        val builder=StringBuilder(firstInitial.toString()).append(lastInitial)
-        return builder.toString().toUpperCase()
+        if(firstInitial==null&&lastInitial==null) return null
+        if(firstInitial==' '&&lastInitial==' ') return null
+        if((firstInitial!=null||firstInitial!=' ')&&(lastInitial==null||lastInitial==' ')) return firstInitial.toString().toUpperCase()
+        if((firstInitial==null||firstInitial==' ')&&(lastInitial!=null||lastInitial!=' ')) return lastInitial.toString().toUpperCase()
+        val firstInit=if(firstInitial==null||firstInitial==' ') "" else firstInitial.toString()
+        val lastInit=if(lastInitial==null||lastInitial==' ') "" else lastInitial.toString()
+        val result=firstInit+lastInit
+
+        return result.toUpperCase()
     }
 }

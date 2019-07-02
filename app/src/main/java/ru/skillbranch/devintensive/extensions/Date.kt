@@ -35,31 +35,32 @@ enum class TimeUnits{
 
 fun Date.humanizeDiff(date: Date= Date()): String {
     val mili=1000L
+
     val time1:Long=this.time
-    val diffTime=time1-Date().time
+    val diffTime=time1-date.time
     var second=diffTime/mili
-    if(second>0){
+    if(this.after(date)){
         when(second){
-            in 0..1-> return "только что"
-            in 1..45->return "через несколько секунд"
-            in 45..75->return "через минуту"
-            in 75..2700->return "через ${second/60} ${when((second/60)%10){
-                1L->"минута"
+            in 0..1->return "только что"
+            in 2..45->return "через несколько секунд"
+            in 46..75->return "через минуту"
+            in 76..2700->return "через ${second/60} ${when((second/60)%10){
+                1L->"минуту"
                 in 2..4->"минуты"
                 in 5..9->"минут"
                 else->"минут"
             }
             }"
-            in 2700..4500->return "через час"
-            in 4500..79200->return "через ${second/60/60} ${when((second/60/60)%10){
+            in 2701..4500->return "через час"
+            in 4501..79200->return "через ${second/60/60} ${when((second/60/60)%10){
                 1L->"час"
                 in 2..4->"часа"
                 in 5..9->"часов"
                 else->"часов"
             }
             }"
-            in 79200..93600->return "через день"
-            in 93600..31104000->return "через ${second/60/60/24} ${when((second/60/60/24)%10){
+            in 79201..93600->return "через день"
+            in 93601..31104000->return "через ${second/60/60/24} ${when((second/60/60/24)%10){
                 1L->"день"
                 in 2..4->"дня"
                 in 5..9->"дней"
@@ -72,25 +73,25 @@ fun Date.humanizeDiff(date: Date= Date()): String {
         second*= (-1)
         when(second){
             in 0..1-> return "только что"
-            in 1..45->return "несколько секунд назад"
-            in 45..75->return "минуту назад"
-            in 75..2700->return "${second/60} ${when((second/60)%10){
-                1L->"минута"
+            in 2..45->return "несколько секунд назад"
+            in 46..75->return "минуту назад"
+            in 76..2700->return "${second/60} ${when((second/60)%10){
+                1L->"минуту"
                 in 2..4->"минуты"
                 in 5..9->"минут"
                 else->"минут"
             }
             } назад"
-            in 2700..4500->return "час назад"
-            in 4500..79200->return "${second/60/60} ${when((second/60/60)%10){
+            in 2701..4500->return "час назад"
+            in 4501..79200->return "${second/60/60} ${when((second/60/60)%10){
                 1L->"час"
                 in 2..4->"часа"
                 in 5..9->"часов"
                 else->"часов"
             }
             } назад"
-            in 79200..93600->return "день назад"
-            in 93600..31104000->return "${second/60/60/24} ${when((second/60/60/24)%10){
+            in 79201..93600->return "день назад"
+            in 93601..31104000->return "${second/60/60/24} ${when((second/60/60/24)%10){
                 1L->"день"
                 in 2..4->"дня"
                 in 5..9->"дней"
@@ -100,5 +101,4 @@ fun Date.humanizeDiff(date: Date= Date()): String {
             else -> return "более года назад"
         }
     }
-    return ""
 }
