@@ -30,7 +30,40 @@ enum class TimeUnits{
     SECOND,
     MINUTE,
     HOUR,
-    DAY
+    DAY;
+
+    fun plural(x: Int): String {
+        when(this){
+            SECOND->return "$x ${when(x%10){
+                1->"секунда"
+                in 2..4->"секунды"
+                in 5..9->"секунд"
+                else->"секунд"
+            }
+            }"
+            MINUTE->return "$x ${when(x%10){
+                1->"минута"
+                in 2..4->"минуты"
+                in 5..9->"минут"
+                else->"минут"
+            }
+            }"
+            HOUR->return "$x ${when(x%10){
+                1->"час"
+                in 2..4->"часа"
+                in 5..9->"часов"
+                else->"часов"
+            }
+            }"
+            DAY->return "$x ${when(x%10){
+                1->"день"
+                in 2..4->"дня"
+                in 5..9->"дней"
+                else->"дней"
+            }
+            }"
+        }
+    }
 }
 
 fun Date.humanizeDiff(date: Date= Date()): String {
