@@ -35,14 +35,14 @@ enum class TimeUnits{
     fun plural(x: Int): String {
         when(this){
             SECOND->return "$x ${when(x%10){
-                1->"секунда"
+                1->"секунду"
                 in 2..4->"секунды"
                 in 5..9->"секунд"
                 else->"секунд"
             }
             }"
             MINUTE->return "$x ${when(x%10){
-                1->"минута"
+                1->"минуту"
                 in 2..4->"минуты"
                 in 5..9->"минут"
                 else->"минут"
