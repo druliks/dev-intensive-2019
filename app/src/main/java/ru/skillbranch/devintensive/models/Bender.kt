@@ -2,6 +2,8 @@ package ru.skillbranch.devintensive.models
 
 class Bender(var status: Status=Status.NORMAL, var question: Question=Question.NAME) {
 
+    var count=0
+
     fun askQuestion():String=when(question){
                 Question.NAME->Question.NAME.question
                 Question.PROFESSION->Question.PROFESSION.question
@@ -12,17 +14,24 @@ class Bender(var status: Status=Status.NORMAL, var question: Question=Question.N
     }
 
     fun listenAnswer(answer:String):Pair<String,Triple<Int,Int,Int>>{
-       if(this.question==Question.NAME&&answer[0].isLowerCase()) "Имя должно начинаться с заглавной буквы" to this.status.color
-        if(this.question==Question.PROFESSION&&answer[0].isUpperCase()) "Профессия должна начинаться со строчной буквы" to this.status.color
-        if(this.question==Question.MATERIAL&&answer.contains("/[0-9]/".toRegex())) "Материал не должен содержать цифр" to this.status.color
-        if(this.question==Question.BDAY&&!answer.matches("\\d+".toRegex())) "Год моего рождения должен содержать только цифры" to this.status.color
-        if(this.question==Question.SERIAL&&!answer.matches("\\d+".toRegex())&&answer.length==7) "Серийный номер содержит только цифры, и их 7" to this.status.color
+       if(question == Question.NAME &&answer[0].isLowerCase()) return "Имя должно начинаться с заглавной буквы" to this.status.color
+        if(question == Question.PROFESSION&&answer[0].isUpperCase()) return "Профессия должна начинаться со строчной буквы" to this.status.color
+        if(question == Question.MATERIAL&&answer.contains("\\d".toRegex())) return "Материал не должен содержать цифр" to this.status.color
+        if(question == Question.BDAY&&!answer.matches("\\d+".toRegex())) return "Год моего рождения должен содержать только цифры" to this.status.color
+        if(question == Question.SERIAL&&(!answer.matches("\\d+".toRegex())||(answer.length in 0..6||answer.length>7))) return "Серийный номер содержит только цифры, и их 7" to this.status.color
+
 
         return if(question.answer.contains(answer)){
            question=question.nextQuestion()
             "Отлично - ты справился\n${question.question}" to status.color
         } else {
-           status=status.nextStatus()
+            ++count
+            if(count>=3) {
+                question=Question.NAME
+                status=Status.NORMAL
+                count=0
+                return "Это неправльный ответ. Давай все по новой\n${question.question}" to status.color}
+            status=status.nextStatus()
            "Это неправльный ответ\n${question.question}" to status.color
        }
     }
@@ -43,7 +52,7 @@ class Bender(var status: Status=Status.NORMAL, var question: Question=Question.N
     }
 
     enum class Question(val question: String,val answer:List<String>){
-        NAME("Как меня зовут?", listOf("Бендер", "bender")) {
+        NAME("Как меня зовут?", listOf("Бендер", "Bender")) {
             override fun nextQuestion(): Question = PROFESSION
         },
         PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")){

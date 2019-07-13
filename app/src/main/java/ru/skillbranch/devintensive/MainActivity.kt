@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.skillbranch.devintensive.extensions.hideKeyboard
 import ru.skillbranch.devintensive.models.Bender
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     send()
+                    hideKeyboard()
                     true
                 }
                 else -> false
@@ -94,7 +96,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun send(){
-        val (phrase,color)= benderObj.listenAnswer(messageEt.text.toString().toLowerCase())
+        val (phrase,color)= benderObj.listenAnswer(messageEt.text.toString())
         messageEt.setText("")
         val (r,g,b)=color
         benderImage.setColorFilter(Color.rgb(r,g,b),PorterDuff.Mode.MULTIPLY)
