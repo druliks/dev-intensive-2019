@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.utils
 
+import android.content.Context
 import java.lang.StringBuilder
 
 
@@ -20,7 +21,7 @@ object Utils {
         return firstName to lastName
     }
 
-    fun transliteration(payload:String?, devider: String=" "): String {
+    fun transliteration(payload:String?, devider: String="_"): String {
 
         val parts=payload?.split(" ")
         val result= StringBuilder("")
@@ -133,5 +134,19 @@ object Utils {
         val result=firstInit+lastInit
 
         return result.toUpperCase()
+    }
+
+    fun convertPxToDp(context: Context, px: Int): Int {
+        val scale = context.resources.displayMetrics.density
+        return (px / scale + 0.5f).toInt()
+    }
+
+    fun convertDpToPx(context: Context, dp: Int): Int {
+        val scale = context.resources.displayMetrics.density
+        return (dp * scale + 0.5f).toInt()
+    }
+
+    fun convertSpToPx(context: Context, sp: Int): Int {
+        return sp * context.resources.displayMetrics.scaledDensity.toInt()
     }
 }
