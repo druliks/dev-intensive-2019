@@ -53,6 +53,17 @@ class ProfileActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         viewModel.getProfileData().observe(this, Observer { updateUI(it) })
         viewModel.getTheme().observe(this, Observer { updateTheme(it) })
+        viewModel.getRepositoryError().observe(this, Observer { updateRepoError(it) })
+        viewModel.getIsRepoError().observe(this, Observer { updateRepository(it) })
+    }
+
+    private fun updateRepository(isError: Boolean) {
+        if (isError) et_repository.text.clear()
+    }
+
+    private fun updateRepoError(isError: Boolean) {
+        wr_repository.isErrorEnabled = isError
+        wr_repository.error = if (isError) "Невалидный адрес репозитория" else null
     }
 
     private fun updateTheme(mode: Int) {
@@ -85,9 +96,8 @@ class ProfileActivity : AppCompatActivity() {
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
-            if (!isRepositoryValid(et_repository.text.toString())) {
-                et_repository.setText("")
-            }
+            viewModel.onRepoEditCompleted(wr_repository.isErrorEnabled)
+
             if(isEditMode) saveProfileInfo()
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
@@ -97,70 +107,13 @@ class ProfileActivity : AppCompatActivity() {
             viewModel.switchTheme()
         }
 
-        et_repository.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(text: CharSequence, p1: Int, p2: Int, p3: Int) {
-                val fullAddress = text.toString()
-                if (isRepositoryValid(fullAddress)) {
-                    wr_repository.error = null
-                    wr_repository.isErrorEnabled = false
-                } else {
-                    wr_repository.error = "Невалидный адрес репозитория"
-                }
+        et_repository.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.onRepositoryChanged(s.toString())
             }
-            override fun afterTextChanged(p0: Editable?) {}
-            override fun beforeTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         })
-    }
-
-    fun isRepositoryValid(fullAddress: String) : Boolean {
-        val address = fullAddress.substringBeforeLast("/").toLowerCase(Locale.getDefault())
-        var username = fullAddress.substringAfterLast("/").toLowerCase(Locale.getDefault())
-
-        if (username == address) username = ""
-
-        return when {
-            fullAddress == "" -> true
-            isAddressValid(address) && isUserNameValid(username) -> true
-            else -> false
-        }
-    }
-
-    private fun isUserNameValid(name: String) : Boolean {
-        val invalidNames = listOf(
-            "",
-            "enterprise",
-            "features",
-            "topics",
-            "collections",
-            "trending",
-            "events",
-            "marketplace",
-            "pricing",
-            "nonprofit",
-            "customer-stories",
-            "security",
-            "login",
-            "join")
-        return when {
-            invalidNames.any{ it == name} -> false
-//            name.startsWith(" ") -> false
-//            name.contains(Regex("[^a-zA-Z0-9-]")) -> false
-//            name.startsWith("-") || name.endsWith("-") -> false
-            else -> true
-        }
-    }
-
-    private fun isAddressValid(address: String) : Boolean {
-        val validAddresses = listOf(
-            "https://www.github.com",
-            "https://github.com",
-            "www.github.com",
-            "github.com"
-        )
-        return when {
-            validAddresses.any{ it == address} -> true
-            else -> false
-        }
     }
 
     private fun showCurrentMode(isEdit: Boolean) {
