@@ -85,6 +85,9 @@ class ProfileActivity : AppCompatActivity() {
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
+            if (!isRepositoryValid(et_repository.text.toString())) {
+                et_repository.setText("")
+            }
             if(isEditMode) saveProfileInfo()
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
