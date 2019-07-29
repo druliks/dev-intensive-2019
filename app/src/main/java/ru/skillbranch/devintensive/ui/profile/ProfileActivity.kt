@@ -38,7 +38,7 @@ class ProfileActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
+        setContentView(R.layout.activity_profile_constraint)
 
         initViews(savedInstanceState)
         initViewModel()
