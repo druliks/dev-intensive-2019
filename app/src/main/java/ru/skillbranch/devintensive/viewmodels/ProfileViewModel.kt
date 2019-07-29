@@ -16,11 +16,7 @@ class ProfileViewModel :ViewModel(){
         appTheme.value=repository.getAppTheme()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-    }
-
-    fun getProfileData()=profileData
+    fun getProfileData():LiveData<Profile> = profileData
 
     fun getTheme():LiveData<Int> = appTheme
 
